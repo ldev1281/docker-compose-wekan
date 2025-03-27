@@ -38,6 +38,7 @@ services:
       - CARD_OPENED_WEBHOOK_ENABLED=false
       - BIGEVENTS_PATTERN=NONE
       - BROWSER_POLICY_ENABLED=true
+      - ACCOUNTS_EMAIL_VERIFICATION=true
     depends_on:
       - wekan-db
     networks:
