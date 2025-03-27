@@ -1,0 +1,68 @@
+services:
+  wekan-db:
+    image: mongo:5.0
+    container_name: wekan-db
+    restart: always
+    volumes:
+      - ./vol/wekan-db/data:/data/db
+    networks:
+      - wekan-private
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  wekan-socat-smtp:
+    build: ./socat-tls
+    restart: unless-stopped
+    command: "-d -d -v tcp-listen:587,fork,reuseaddr tcp-connect:smtp.mailgun.org:587"
+    networks:
+      - wekan-universe
+      - wekan-private
+
+  wekan-app:
+    user: root
+    image: quay.io/wekan/wekan:latest
+    container_name: wekan-app
+    restart: always
+    environment:
+      - WRITABLE_PATH=/data
+      - MONGO_URL=${MONGO_URL}
+      - ROOT_URL=${ROOT_URL}
+      - MAIL_URL=${MAIL_URL}
+      - MAIL_FROM=${MAIL_FROM}
+      - WITH_API=true
+      - RICHER_CARD_COMMENT_EDITOR=false
+      - CARD_OPENED_WEBHOOK_ENABLED=false
+      - BIGEVENTS_PATTERN=NONE
+      - BROWSER_POLICY_ENABLED=true
+    depends_on:
+      - wekan-db
+    networks:
+      - wekan-private
+      - caddy-wekan
+    volumes:
+      - ./vol/wekan-app/data:/data
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  wekan-files:
+    driver: local
+  wekan-db:
+    driver: local
+  wekan-db-dump:
+    driver: local
+
+networks:
+  caddy-wekan:
+    name: caddy-wekan
+    external: true
+  wekan-universe:
+    name: wekan-universe
+    driver: bridge
+  wekan-private:
+    name: wekan-private
+    driver: bridge
+    internal: true
