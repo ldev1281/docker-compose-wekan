@@ -24,7 +24,9 @@ services:
 
   wekan-app:
     user: root
-    image: quay.io/wekan/wekan:latest
+    image: wekanteam/wekan:latest
+
+#    image: quay.io/wekan/wekan:latest
     container_name: wekan-app
     restart: always
     environment:
