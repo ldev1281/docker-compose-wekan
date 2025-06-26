@@ -10,7 +10,7 @@ ENV_FILE="${SCRIPT_DIR}/../.env"
 
 VOL_DIR="${SCRIPT_DIR}/vol"
 
-MONGO_VERSION=7
+WEKAN_MONGO_VERSION=7
 chown -R 999:999 $VOL_DIR/*
 
 # Load existing configuration from .env file
@@ -27,8 +27,8 @@ prompt_for_configuration() {
 
     echo "MongoDB settings:"
 
-    read -p "MONGO_VERSION [${MONGO_VERSION:-7}]: " input
-    MONGO_VERSION=${input:-${MONGO_VERSION:-7}}
+    read -p "WEKAN_MONGO_VERSION [${WEKAN_MONGO_VERSION:-7}]: " input
+    WEKAN_MONGO_VERSION=${input:-${WEKAN_MONGO_VERSION:-7}}
 
     echo ""
     echo "Wekan settings:"
@@ -65,7 +65,7 @@ prompt_for_configuration() {
 confirm_and_save_configuration() {
     CONFIG_LINES=(
         "# MongoDB"
-        "MONGO_VERSION=${MONGO_VERSION}"
+        "WEKAN_MONGO_VERSION=${WEKAN_MONGO_VERSION}"
         ""
         "# Wekan"
         "WEKAN_VERSION=${WEKAN_VERSION}"

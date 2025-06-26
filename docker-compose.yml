@@ -1,6 +1,6 @@
 services:
   wekan-db:
-    image: mongo:${MONGO_VERSION}
+    image: mongo:${WEKAN_MONGO_VERSION}
     container_name: wekan-db
     restart: unless-stopped
     volumes:
