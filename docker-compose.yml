@@ -1,70 +1,64 @@
 services:
   wekan-db:
-    image: mongo:5.0
+    image: mongo:${MONGO_VERSION}
     container_name: wekan-db
-    restart: always
-    volumes:
-      - ./vol/wekan-db/data:/data/db
-    networks:
-      - wekan-private
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
-  wekan-socat-smtp:
-    build: ./socat-tls
     restart: unless-stopped
-    command: "-d -d -v tcp-listen:587,fork,reuseaddr tcp-connect:smtp.mailgun.org:587"
+    volumes:
+      - ./vol/wekan-db:/data/db
     networks:
-      - wekan-universe
       - wekan-private
 
   wekan-app:
-    user: root
-    image: wekanteam/wekan:v7.84
-#    image: wekanteam/wekan:latest
-#    image: quay.io/wekan/wekan:latest
+    image: quay.io/wekan/wekan:${WEKAN_VERSION}
     container_name: wekan-app
-    restart: always
+    restart: unless-stopped
     environment:
-      - WRITABLE_PATH=/data
-      - MONGO_URL=${MONGO_URL}
-      - ROOT_URL=${ROOT_URL}
-      - MAIL_URL=${MAIL_URL}
-      - MAIL_FROM=${MAIL_FROM}
-      - WITH_API=true
-      - RICHER_CARD_COMMENT_EDITOR=false
-      - CARD_OPENED_WEBHOOK_ENABLED=false
-      - BIGEVENTS_PATTERN=NONE
-      - BROWSER_POLICY_ENABLED=true
-      - ACCOUNTS_EMAIL_VERIFICATION=true
-    depends_on:
-      - wekan-db
-    networks:
-      - wekan-private
-      - caddy-wekan
+      MONGO_URL: mongodb://wekan-db:27017/wekan
+      ROOT_URL: ${WEKAN_URL}
+      MAIL_URL: smtp://wekan-socat-socks5h-smtp:${WEKAN_SOCAT_SMTP_PORT}
+      MAIL_FROM: ${WEKAN_SMTP_FROM}
+      MAIL_USER: ${WEKAN_SMTP_USER}
+      MAIL_PASSWORD: ${WEKAN_SMTP_PASS}
+      WITH_API: 'true'
+      RICHER_CARD_COMMENT_EDITOR: 'false'
+      CARD_OPENED_WEBHOOK_ENABLED: 'false'
+      BIGEVENTS_PATTERN: 'NONE'
+      BROWSER_POLICY_ENABLED: 'true'
+      ACCOUNTS_EMAIL_VERIFICATION: 'true'
     volumes:
       - ./vol/wekan-app/data:/data
       - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - wekan-db
+      - wekan-socat-smtp
+    networks:
+      - caddy-wekan
+      - wekan-universe
+      - wekan-private
 
-volumes:
-  wekan-files:
-    driver: local
-  wekan-db:
-    driver: local
-  wekan-db-dump:
-    driver: local
+  wekan-socat-smtp:
+    image: ghcr.io/ldev1281/docker-socat-socks5h:latest
+    container_name: wekan-socat-socks5h-smtp
+    restart: unless-stopped
+    environment:
+      LISTEN_PORT: ${WEKAN_SOCAT_SMTP_PORT}
+      TARGET_HOST: ${WEKAN_SOCAT_SMTP_HOST}
+      TARGET_PORT: ${WEKAN_SOCAT_SMTP_PORT}
+      SOCKS5H_HOST: ${WEKAN_SOCAT_SMTP_SOCKS5H_HOST:-}
+      SOCKS5H_PORT: ${WEKAN_SOCAT_SMTP_SOCKS5H_PORT:-}
+    networks:
+      - wekan-universe
+      - wekan-private
 
 networks:
   caddy-wekan:
     name: caddy-wekan
     external: true
+
   wekan-universe:
     name: wekan-universe
     driver: bridge
+
   wekan-private:
     name: wekan-private
     driver: bridge
