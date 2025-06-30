@@ -46,6 +46,8 @@ services:
       TARGET_PORT: ${WEKAN_SOCAT_SMTP_PORT}
       SOCKS5H_HOST: ${WEKAN_SOCAT_SMTP_SOCKS5H_HOST:-}
       SOCKS5H_PORT: ${WEKAN_SOCAT_SMTP_SOCKS5H_PORT:-}
+      SOCKS5H_USER: ${WEKAN_SOCAT_SMTP_SOCKS5H_USER:-}
+      SOCKS5H_PASSWORD: ${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}      
     networks:
       - wekan-universe
       - wekan-private
