@@ -36,8 +36,8 @@ prompt_for_configuration() {
     read -p "WEKAN_VERSION [${WEKAN_VERSION:-v7.92}]: " input
     WEKAN_VERSION=${input:-${WEKAN_VERSION:-v7.92}}
 
-    read -p "WEKAN_URL [${WEKAN_URL:-http://wekan.ldev2181.com}]: " input
-    WEKAN_URL=${input:-${WEKAN_URL:-http://wekan.ldev2181.com}}
+    read -p "WEKAN_APP_HOSTNAME [${WEKAN_APP_HOSTNAME:-wekan.example.com}]: " input
+    WEKAN_APP_HOSTNAME=${input:-${WEKAN_APP_HOSTNAME:-wekan.example.com}}
 
     read -p "WEKAN_SMTP_FROM [${WEKAN_SMTP_FROM:-wekan@sandbox123.mailgun.org}]: " input
     WEKAN_SMTP_FROM=${input:-${WEKAN_SMTP_FROM:-wekan@sandbox123.mailgun.org}}
@@ -75,7 +75,7 @@ confirm_and_save_configuration() {
         ""
         "# Wekan"
         "WEKAN_VERSION=${WEKAN_VERSION}"
-        "WEKAN_URL=${WEKAN_URL}"
+        "WEKAN_APP_HOSTNAME=${WEKAN_APP_HOSTNAME}"
         "WEKAN_SMTP_FROM=${WEKAN_SMTP_FROM}"
         "WEKAN_SMTP_USER=${WEKAN_SMTP_USER}"
         "WEKAN_SMTP_PASS=${WEKAN_SMTP_PASS}"
@@ -87,7 +87,7 @@ confirm_and_save_configuration() {
         "WEKAN_SOCAT_SMTP_SOCKS5H_HOST=${WEKAN_SOCAT_SMTP_SOCKS5H_HOST}"
         "WEKAN_SOCAT_SMTP_SOCKS5H_PORT=${WEKAN_SOCAT_SMTP_SOCKS5H_PORT}"
         "WEKAN_SOCAT_SMTP_SOCKS5H_USER=${WEKAN_SOCAT_SMTP_SOCKS5H_USER}"
-        "WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD=${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD}"        
+        "WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD=${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD}"
     )
 
     echo ""
@@ -107,7 +107,7 @@ confirm_and_save_configuration() {
         exit 1
     fi
 
-    printf "%s\n" "${CONFIG_LINES[@]}" > "$ENV_FILE"
+    printf "%s\n" "${CONFIG_LINES[@]}" >"$ENV_FILE"
     echo ".env file saved to $ENV_FILE"
     echo ""
 }
@@ -126,7 +126,7 @@ setup_containers() {
     echo "Waiting 60 seconds for services to initialize..."
     sleep 60
 
-    echo "Done! Wekan should be available at: $WEKAN_URL"
+    echo "Done! Wekan should be available at: $WEKAN_APP_HOSTNAME"
     echo ""
 }
 

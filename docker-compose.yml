@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     environment:
       MONGO_URL: mongodb://wekan-db:27017/wekan
-      ROOT_URL: ${WEKAN_URL}
+      ROOT_URL: https://${WEKAN_APP_HOSTNAME}
       MAIL_URL: smtp://wekan-socat-socks5h-smtp:${WEKAN_SOCAT_SMTP_PORT}
       MAIL_FROM: ${WEKAN_SMTP_FROM}
       MAIL_USER: ${WEKAN_SMTP_USER}
