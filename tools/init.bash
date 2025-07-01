@@ -8,10 +8,9 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="${SCRIPT_DIR}/../.env"
 
-VOL_DIR="${SCRIPT_DIR}/vol"
+VOL_DIR="${SCRIPT_DIR}/../vol/"
 
 WEKAN_MONGO_VERSION=7
-chown -R 999:999 $VOL_DIR/*
 
 # Load existing configuration from .env file
 load_existing_env() {
@@ -119,7 +118,8 @@ setup_containers() {
 
     echo "Clearing volume data..."
     [ -d "${VOL_DIR}" ] && rm -rf "${VOL_DIR}"/*
-
+    mkdir -p "${VOL_DIR}wekan-app/data" && chown 999:999 "${VOL_DIR}wekan-app/data"
+    
     echo "Starting containers..."
     docker compose up -d
 
