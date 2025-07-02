@@ -68,7 +68,7 @@ prompt_for_configuration() {
     read -p "WEKAN_KEYCLOAK_OAUTH [${WEKAN_KEYCLOAK_OAUTH:-yes}]: " input
     WEKAN_KEYCLOAK_OAUTH=${input:-${WEKAN_KEYCLOAK_OAUTH:-yes}}
 
-    if [ "$WEKAN_KEYCLOAK_OAUTH" = "yes"] || [ -z "$WEKAN_KEYCLOAK_OAUTH"]; then
+    if [ "$WEKAN_KEYCLOAK_OAUTH" = "yes" ]; then
         read -p "WEKAN_KEYCLOAK_REALM [${WEKAN_KEYCLOAK_REALM:-master}]: " input
         WEKAN_KEYCLOAK_REALM=${input:-${WEKAN_KEYCLOAK_REALM:-master}}
 
