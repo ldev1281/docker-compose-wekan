@@ -64,6 +64,26 @@ prompt_for_configuration() {
 
     read -p "WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD [${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}]: " input
     WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD=${input:-${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}}
+
+    read -p "WEKAN_KEYCLOAK_OAUTH [${WEKAN_KEYCLOAK_OAUTH:-yes}]: " input
+    WEKAN_KEYCLOAK_OAUTH=${input:-${WEKAN_KEYCLOAK_OAUTH:-yes}}
+
+    if [ "$WEKAN_KEYCLOAK_OAUTH" = "yes"]; then
+        read -p "WEKAN_KEYCLOAK_REALM [${WEKAN_KEYCLOAK_REALM:-master}]: " input
+        WEKAN_KEYCLOAK_REALM=${input:-${WEKAN_KEYCLOAK_REALM:-master}}
+
+        read -p "WEKAN_KEYCLOAK_CLIENT_ID [${WEKAN_KEYCLOAK_CLIENT_ID:-wekan}]: " input
+        WEKAN_KEYCLOAK_CLIENT_ID=${input:-${WEKAN_KEYCLOAK_CLIENT_ID:-wekan}}
+
+        read -p "WEKAN_KEYCLOAK_SECRET [${WEKAN_KEYCLOAK_SECRET:-}]: " input
+        WEKAN_KEYCLOAK_SECRET=${input:-${WEKAN_KEYCLOAK_SECRET:-}}
+
+        read -p "WEKAN_KEYCLOAK_SERVER_URL [${WEKAN_KEYCLOAK_SERVER_URL:-https://auth.example.com}]: " input
+        WEKAN_KEYCLOAK_SERVER_URL=${input:-${WEKAN_KEYCLOAK_SERVER_URL:-https://auth.example.com}}
+    else
+        WEKAN_KEYCLOAK_OAUTH=""
+    fi
+
 }
 
 # Display configuration and ask user to confirm
@@ -87,6 +107,15 @@ confirm_and_save_configuration() {
         "WEKAN_SOCAT_SMTP_SOCKS5H_PORT=${WEKAN_SOCAT_SMTP_SOCKS5H_PORT}"
         "WEKAN_SOCAT_SMTP_SOCKS5H_USER=${WEKAN_SOCAT_SMTP_SOCKS5H_USER}"
         "WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD=${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD}"
+        ""
+        "# Wekan Keycloak OAuth settings"
+        "# Set WEKAN_KEYCLOAK_OAUTH empty or comment it out to disables"
+        "WEKAN_KEYCLOAK_OAUTH=${WEKAN_KEYCLOAK_OAUTH}"
+        "WEKAN_KEYCLOAK_REALM=${WEKAN_KEYCLOAK_REALM:-}"
+        "WEKAN_KEYCLOAK_CLIENT_ID=${WEKAN_KEYCLOAK_CLIENT_ID:-}"
+        "WEKAN_KEYCLOAK_SECRET=${WEKAN_KEYCLOAK_SECRET:-}"
+        "WEKAN_KEYCLOAK_SERVER_URL=${WEKAN_KEYCLOAK_SERVER_URL:-}"
+
     )
 
     echo ""
@@ -119,7 +148,7 @@ setup_containers() {
     echo "Clearing volume data..."
     [ -d "${VOL_DIR}" ] && rm -rf "${VOL_DIR}"/*
     mkdir -p "${VOL_DIR}wekan-app/data" && chown 999:999 "${VOL_DIR}wekan-app/data"
-    
+
     echo "Starting containers..."
     docker compose up -d
 
