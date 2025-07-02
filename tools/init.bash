@@ -78,7 +78,7 @@ confirm_and_save_configuration() {
         "WEKAN_SMTP_FROM=${WEKAN_SMTP_FROM}"
         "WEKAN_SMTP_USER=${WEKAN_SMTP_USER}"
         "WEKAN_SMTP_PASS=${WEKAN_SMTP_PASS}"
-        "WEKAN_MAIL_URL=smtp://wekan-socat-socks5h-smtp:${WEKAN_SOCAT_SMTP_PORT}/"
+        "WEKAN_MAIL_URL=smtp://wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}/"
         ""
         "# SMTP socat proxy settings"
         "WEKAN_SOCAT_SMTP_PORT=${WEKAN_SOCAT_SMTP_PORT}"
