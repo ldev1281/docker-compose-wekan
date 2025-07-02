@@ -19,12 +19,12 @@ services:
       MAIL_FROM: ${WEKAN_SMTP_FROM}
       MAIL_USER: ${WEKAN_SMTP_USER}
       MAIL_PASSWORD: ${WEKAN_SMTP_PASS}
-      WITH_API: 'true'
-      RICHER_CARD_COMMENT_EDITOR: 'false'
-      CARD_OPENED_WEBHOOK_ENABLED: 'false'
-      BIGEVENTS_PATTERN: 'NONE'
-      BROWSER_POLICY_ENABLED: 'true'
-      ACCOUNTS_EMAIL_VERIFICATION: 'true'
+      WITH_API: "true"
+      RICHER_CARD_COMMENT_EDITOR: "false"
+      CARD_OPENED_WEBHOOK_ENABLED: "false"
+      BIGEVENTS_PATTERN: "NONE"
+      BROWSER_POLICY_ENABLED: "true"
+      ACCOUNTS_EMAIL_VERIFICATION: "true"
     volumes:
       - ./vol/wekan-app/data:/data
       - /etc/localtime:/etc/localtime:ro
@@ -46,7 +46,7 @@ services:
       SOCKS5H_HOST: ${WEKAN_SOCAT_SMTP_SOCKS5H_HOST:-}
       SOCKS5H_PORT: ${WEKAN_SOCAT_SMTP_SOCKS5H_PORT:-}
       SOCKS5H_USER: ${WEKAN_SOCAT_SMTP_SOCKS5H_USER:-}
-      SOCKS5H_PASSWORD: ${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}      
+      SOCKS5H_PASSWORD: ${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}
     networks:
       wekan-universe: {}
       wekan-private:
