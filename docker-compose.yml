@@ -1,4 +1,4 @@
-services:
+sservices:
   wekan-db:
     image: mongo:${WEKAN_MONGO_VERSION}
     container_name: wekan-db
@@ -17,8 +17,6 @@ services:
       ROOT_URL: https://${WEKAN_APP_HOSTNAME}
       MAIL_URL: ${WEKAN_MAIL_URL}
       MAIL_FROM: ${WEKAN_SMTP_FROM}
-      MAIL_USER: ${WEKAN_SMTP_USER}
-      MAIL_PASSWORD: ${WEKAN_SMTP_PASS}
       WITH_API: "true"
       RICHER_CARD_COMMENT_EDITOR: "false"
       CARD_OPENED_WEBHOOK_ENABLED: "false"

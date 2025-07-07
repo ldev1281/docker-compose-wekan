@@ -1,13 +1,17 @@
 #!/bin/bash
 
 # -------------------------------------
-# Wekan setup script
+# Wekan setup script with SMTP URL encoding
 # -------------------------------------
+
+# Encode a string for safe URL usage
+urlencode() {
+    python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$1"
+}
 
 # Get the absolute path of script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="${SCRIPT_DIR}/../.env"
-
 VOL_DIR="${SCRIPT_DIR}/../vol/"
 
 WEKAN_MONGO_VERSION=7
@@ -25,13 +29,11 @@ prompt_for_configuration() {
     echo ""
 
     echo "MongoDB settings:"
-
     read -p "WEKAN_MONGO_VERSION [${WEKAN_MONGO_VERSION:-7}]: " input
     WEKAN_MONGO_VERSION=${input:-${WEKAN_MONGO_VERSION:-7}}
 
     echo ""
     echo "Wekan settings:"
-
     read -p "WEKAN_VERSION [${WEKAN_VERSION:-v7.92}]: " input
     WEKAN_VERSION=${input:-${WEKAN_VERSION:-v7.92}}
 
@@ -43,9 +45,11 @@ prompt_for_configuration() {
 
     read -p "WEKAN_SMTP_USER [${WEKAN_SMTP_USER:-postmaster@sandbox123.mailgun.org}]: " input
     WEKAN_SMTP_USER=${input:-${WEKAN_SMTP_USER:-postmaster@sandbox123.mailgun.org}}
+    ENCODED_SMTP_USER=$(urlencode "$WEKAN_SMTP_USER")
 
     read -p "WEKAN_SMTP_PASS [${WEKAN_SMTP_PASS:-password}]: " input
     WEKAN_SMTP_PASS=${input:-${WEKAN_SMTP_PASS:-password}}
+    ENCODED_SMTP_PASS=$(urlencode "$WEKAN_SMTP_PASS")
 
     read -p "WEKAN_SOCAT_SMTP_PORT [${WEKAN_SOCAT_SMTP_PORT:-587}]: " input
     WEKAN_SOCAT_SMTP_PORT=${input:-${WEKAN_SOCAT_SMTP_PORT:-587}}
@@ -83,7 +87,6 @@ prompt_for_configuration() {
     else
         WEKAN_KEYCLOAK_OAUTH=""
     fi
-
 }
 
 # Display configuration and ask user to confirm
@@ -98,7 +101,7 @@ confirm_and_save_configuration() {
         "WEKAN_SMTP_FROM=${WEKAN_SMTP_FROM}"
         "WEKAN_SMTP_USER=${WEKAN_SMTP_USER}"
         "WEKAN_SMTP_PASS=${WEKAN_SMTP_PASS}"
-        "WEKAN_MAIL_URL=smtp://wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}/"
+        "WEKAN_MAIL_URL=smtp://${ENCODED_SMTP_USER}:${ENCODED_SMTP_PASS}@wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}/"
         ""
         "# SMTP socat proxy settings"
         "WEKAN_SOCAT_SMTP_PORT=${WEKAN_SOCAT_SMTP_PORT}"
@@ -115,7 +118,6 @@ confirm_and_save_configuration() {
         "WEKAN_KEYCLOAK_CLIENT_ID=${WEKAN_KEYCLOAK_CLIENT_ID:-}"
         "WEKAN_KEYCLOAK_SECRET=${WEKAN_KEYCLOAK_SECRET:-}"
         "WEKAN_KEYCLOAK_SERVER_URL=${WEKAN_KEYCLOAK_SERVER_URL:-}"
-
     )
 
     echo ""
