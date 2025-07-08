@@ -1,4 +1,4 @@
-sservices:
+services:
   wekan-db:
     image: mongo:${WEKAN_MONGO_VERSION}
     container_name: wekan-db
