@@ -1,13 +1,8 @@
 #!/bin/bash
-
 # -------------------------------------
-# Wekan setup script with SMTP URL encoding
+# Wekan setup script 
 # -------------------------------------
-
-# Encode a string for safe URL usage
-urlencode() {
-    python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$1"
-}
+set -e
 
 # Get the absolute path of script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -45,11 +40,9 @@ prompt_for_configuration() {
 
     read -p "WEKAN_SMTP_USER [${WEKAN_SMTP_USER:-postmaster@sandbox123.mailgun.org}]: " input
     WEKAN_SMTP_USER=${input:-${WEKAN_SMTP_USER:-postmaster@sandbox123.mailgun.org}}
-    ENCODED_SMTP_USER=$(urlencode "$WEKAN_SMTP_USER")
 
     read -p "WEKAN_SMTP_PASS [${WEKAN_SMTP_PASS:-password}]: " input
     WEKAN_SMTP_PASS=${input:-${WEKAN_SMTP_PASS:-password}}
-    ENCODED_SMTP_PASS=$(urlencode "$WEKAN_SMTP_PASS")
 
     read -p "WEKAN_SOCAT_SMTP_PORT [${WEKAN_SOCAT_SMTP_PORT:-587}]: " input
     WEKAN_SOCAT_SMTP_PORT=${input:-${WEKAN_SOCAT_SMTP_PORT:-587}}
@@ -99,9 +92,7 @@ confirm_and_save_configuration() {
         "WEKAN_VERSION=${WEKAN_VERSION}"
         "WEKAN_APP_HOSTNAME=${WEKAN_APP_HOSTNAME}"
         "WEKAN_SMTP_FROM=${WEKAN_SMTP_FROM}"
-        "WEKAN_SMTP_USER=${WEKAN_SMTP_USER}"
-        "WEKAN_SMTP_PASS=${WEKAN_SMTP_PASS}"
-        "WEKAN_MAIL_URL=smtp://${ENCODED_SMTP_USER}:${ENCODED_SMTP_PASS}@wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}/"
+        "WEKAN_MAIL_URL='smtp://${WEKAN_SMTP_USER}:${WEKAN_SMTP_PASS}@wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}/'"
         ""
         "# SMTP socat proxy settings"
         "WEKAN_SOCAT_SMTP_PORT=${WEKAN_SOCAT_SMTP_PORT}"
