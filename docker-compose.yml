@@ -15,7 +15,7 @@ services:
     environment:
       MONGO_URL: mongodb://wekan-db:27017/wekan
       ROOT_URL: https://${WEKAN_APP_HOSTNAME}
-      MAIL_URL: ${WEKAN_MAIL_URL}
+      MAIL_URL: smtp://${WEKAN_SMTP_USER}:${WEKAN_SMTP_PASS}@wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}
       MAIL_FROM: ${WEKAN_SMTP_FROM}
       WITH_API: "true"
       RICHER_CARD_COMMENT_EDITOR: "false"

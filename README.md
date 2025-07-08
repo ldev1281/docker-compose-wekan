@@ -43,7 +43,6 @@ Configuration Variables:
 | `WEKAN_SMTP_FROM`                 | Email address used as the sender                                         | `wekan@sandbox123.mailgun.org`            |
 | `WEKAN_SMTP_USER`                 | SMTP username                                                            | `postmaster@sandbox123.mailgun.org`       |
 | `WEKAN_SMTP_PASS`                 | SMTP password                                                            | `password`                                |
-| `WEKAN_MAIL_URL`                  | Custom SMTP URL (can be set manually in `.env`; `WEKAN_SMTP_USER` and `WEKAN_SMTP_PASS` are not required)                                                   | `smtp://user:pass@postmaster@sandbox123.mailgun.org:587/` |
 | `WEKAN_SOCAT_SMTP_PORT`           | Local port for SMTP forwarding (via socat container)                    | `587`                                      |
 | `WEKAN_SOCAT_SMTP_HOST`           | Remote SMTP server hostname                                             | `smtp.mailgun.org`                         |
 | `WEKAN_SOCAT_SMTP_SOCKS5H_HOST`   | SOCKS5h proxy hostname (optional)                                       | `dante.example.com`                        |
