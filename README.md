@@ -110,6 +110,27 @@ Wekan and MongoDB use the following bind-mounted volumes for data persistence:
 ├── .env
 ```
 
+
+## Creating a Backup Task for Wekan
+
+To create a backup task for your Wekan deployment using [`backup-tool`](https://github.com/jordimock/backup-tool), add a new task file to `/etc/limbo-backup/rsync.conf.d/`:
+
+```bash
+sudo nano /etc/limbo-backup/rsync.conf.d/10-wekan.conf.bash
+```
+
+Paste the following contents:
+
+```bash
+CMD_BEFORE_BACKUP="docker compose --project-directory /docker/wekan down"
+CMD_AFTER_BACKUP="docker compose --project-directory /docker/wekan up -d"
+
+INCLUDE_PATHS=(
+  "/docker/wekan/.env"
+  "/docker/wekan/vol"
+)
+```
+
 ## License
 
 Licensed under the Prostokvashino License. See [LICENSE](LICENSE) for details.
