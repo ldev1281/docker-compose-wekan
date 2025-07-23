@@ -23,11 +23,13 @@ prompt_for_configuration() {
     echo "Please enter configuration values (press Enter to keep current/default value):"
     echo ""
 
+    # MongoDB
     echo "MongoDB settings:"
     read -p "WEKAN_MONGO_VERSION [${WEKAN_MONGO_VERSION:-7}]: " input
     WEKAN_MONGO_VERSION=${input:-${WEKAN_MONGO_VERSION:-7}}
 
     echo ""
+    # Wekan
     echo "Wekan settings:"
     read -p "WEKAN_VERSION [${WEKAN_VERSION:-v7.92}]: " input
     WEKAN_VERSION=${input:-${WEKAN_VERSION:-v7.92}}
@@ -35,6 +37,9 @@ prompt_for_configuration() {
     read -p "WEKAN_APP_HOSTNAME [${WEKAN_APP_HOSTNAME:-wekan.example.com}]: " input
     WEKAN_APP_HOSTNAME=${input:-${WEKAN_APP_HOSTNAME:-wekan.example.com}}
 
+    echo ""
+    # SMTP
+    echo "SMTP settings:"
     read -p "WEKAN_SMTP_FROM [${WEKAN_SMTP_FROM:-wekan@sandbox123.mailgun.org}]: " input
     WEKAN_SMTP_FROM=${input:-${WEKAN_SMTP_FROM:-wekan@sandbox123.mailgun.org}}
 
@@ -44,28 +49,16 @@ prompt_for_configuration() {
     read -p "WEKAN_SMTP_PASS [${WEKAN_SMTP_PASS:-password}]: " input
     WEKAN_SMTP_PASS=${input:-${WEKAN_SMTP_PASS:-password}}
 
-    read -p "WEKAN_SOCAT_SMTP_PORT [${WEKAN_SOCAT_SMTP_PORT:-587}]: " input
-    WEKAN_SOCAT_SMTP_PORT=${input:-${WEKAN_SOCAT_SMTP_PORT:-587}}
+    read -p "WEKAN_SMTP_PORT [${WEKAN_SMTP_PORT:-587}]: " input
+    WEKAN_SMTP_PORT=${input:-${WEKAN_SMTP_PORT:-587}}
 
-    read -p "WEKAN_SOCAT_SMTP_HOST [${WEKAN_SOCAT_SMTP_HOST:-smtp.mailgun.org}]: " input
-    WEKAN_SOCAT_SMTP_HOST=${input:-${WEKAN_SOCAT_SMTP_HOST:-smtp.mailgun.org}}
+    echo ""
+    # OAuth (Keycloak)
+    echo "Keycloak OAuth settings:"
+    read -p "Enable Keycloak OAuth? (yes/no) [${WEKAN_KEYCLOAK_OAUTH:-no}]: " input
+    WEKAN_KEYCLOAK_OAUTH=${input:-${WEKAN_KEYCLOAK_OAUTH:-no}}
 
-    read -p "WEKAN_SOCAT_SMTP_SOCKS5H_HOST [${WEKAN_SOCAT_SMTP_SOCKS5H_HOST:-}]: " input
-    WEKAN_SOCAT_SMTP_SOCKS5H_HOST=${input:-${WEKAN_SOCAT_SMTP_SOCKS5H_HOST:-}}
-
-    read -p "WEKAN_SOCAT_SMTP_SOCKS5H_PORT [${WEKAN_SOCAT_SMTP_SOCKS5H_PORT:-}]: " input
-    WEKAN_SOCAT_SMTP_SOCKS5H_PORT=${input:-${WEKAN_SOCAT_SMTP_SOCKS5H_PORT:-}}
-
-    read -p "WEKAN_SOCAT_SMTP_SOCKS5H_USER [${WEKAN_SOCAT_SMTP_SOCKS5H_USER:-}]: " input
-    WEKAN_SOCAT_SMTP_SOCKS5H_USER=${input:-${WEKAN_SOCAT_SMTP_SOCKS5H_USER:-}}
-
-    read -p "WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD [${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}]: " input
-    WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD=${input:-${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}}
-
-    read -p "WEKAN_KEYCLOAK_OAUTH [${WEKAN_KEYCLOAK_OAUTH:-yes}]: " input
-    WEKAN_KEYCLOAK_OAUTH=${input:-${WEKAN_KEYCLOAK_OAUTH:-yes}}
-
-    if [ "$WEKAN_KEYCLOAK_OAUTH" = "yes" ]; then
+    if [[ "$WEKAN_KEYCLOAK_OAUTH" == "yes" ]]; then
         read -p "WEKAN_KEYCLOAK_REALM [${WEKAN_KEYCLOAK_REALM:-master}]: " input
         WEKAN_KEYCLOAK_REALM=${input:-${WEKAN_KEYCLOAK_REALM:-master}}
 
@@ -91,20 +84,15 @@ confirm_and_save_configuration() {
         "# Wekan"
         "WEKAN_VERSION=${WEKAN_VERSION}"
         "WEKAN_APP_HOSTNAME=${WEKAN_APP_HOSTNAME}"
+        ""
+        "# SMTP"
         "WEKAN_SMTP_FROM=${WEKAN_SMTP_FROM}"
         "WEKAN_SMTP_USER='${WEKAN_SMTP_USER}'"
-        "WEKAN_SMTP_PASS='${WEKAN_SMTP_PASS}'"                   
-        ""
-        "# SMTP socat proxy settings"
-        "WEKAN_SOCAT_SMTP_PORT=${WEKAN_SOCAT_SMTP_PORT}"
-        "WEKAN_SOCAT_SMTP_HOST=${WEKAN_SOCAT_SMTP_HOST}"
-        "WEKAN_SOCAT_SMTP_SOCKS5H_HOST=${WEKAN_SOCAT_SMTP_SOCKS5H_HOST}"
-        "WEKAN_SOCAT_SMTP_SOCKS5H_PORT=${WEKAN_SOCAT_SMTP_SOCKS5H_PORT}"
-        "WEKAN_SOCAT_SMTP_SOCKS5H_USER=${WEKAN_SOCAT_SMTP_SOCKS5H_USER}"
-        "WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD=${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD}"
+        "WEKAN_SMTP_PASS='${WEKAN_SMTP_PASS}'"
+        "WEKAN_SMTP_PORT=${WEKAN_SMTP_PORT}"
         ""
         "# Wekan Keycloak OAuth settings"
-        "# Set WEKAN_KEYCLOAK_OAUTH empty or comment it out to disables"
+        "# Set WEKAN_KEYCLOAK_OAUTH empty or comment it out to disable"
         "WEKAN_KEYCLOAK_OAUTH=${WEKAN_KEYCLOAK_OAUTH}"
         "WEKAN_KEYCLOAK_REALM=${WEKAN_KEYCLOAK_REALM:-}"
         "WEKAN_KEYCLOAK_CLIENT_ID=${WEKAN_KEYCLOAK_CLIENT_ID:-}"
@@ -129,7 +117,7 @@ confirm_and_save_configuration() {
         exit 1
     fi
 
-    printf "%s\n" "${CONFIG_LINES[@]}" >"$ENV_FILE"
+    printf "%s\n" "${CONFIG_LINES[@]}" > "$ENV_FILE"
     echo ".env file saved to $ENV_FILE"
     echo ""
 }
@@ -140,8 +128,8 @@ setup_containers() {
     docker compose down -v || true
 
     echo "Clearing volume data..."
-    [ -d "${VOL_DIR}" ] && rm -rf "${VOL_DIR}"/*
-    mkdir -p "${VOL_DIR}wekan-app/data" && chown 999:999 "${VOL_DIR}wekan-app/data"
+    [ -d "${VOL_DIR}" ] && rm -rf "${VOL_DIR:?}"/*
+    mkdir -p "${VOL_DIR}/wekan-app/data" && chown 999:999 "${VOL_DIR}/wekan-app/data"
 
     echo "Starting containers..."
     docker compose up -d
@@ -149,7 +137,7 @@ setup_containers() {
     echo "Waiting 60 seconds for services to initialize..."
     sleep 60
 
-    echo "Done! Wekan should be available at: $WEKAN_APP_HOSTNAME"
+    echo "Done! Wekan should be available at: https://${WEKAN_APP_HOSTNAME}"
     echo ""
 }
 

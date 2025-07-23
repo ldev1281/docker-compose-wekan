@@ -1,4 +1,4 @@
-services:
+sservices:
   wekan-db:
     image: mongo:${WEKAN_MONGO_VERSION}
     container_name: wekan-db
@@ -15,7 +15,7 @@ services:
     environment:
       MONGO_URL: mongodb://wekan-db:27017/wekan
       ROOT_URL: https://${WEKAN_APP_HOSTNAME}
-      MAIL_URL: smtp://${WEKAN_SMTP_USER}:${WEKAN_SMTP_PASS}@wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}
+      MAIL_URL: smtp://${WEKAN_SMTP_USER}:${WEKAN_SMTP_PASS}@smtp.mailgun.org:${WEKAN_SMTP_PORT}
       MAIL_FROM: ${WEKAN_SMTP_FROM}
       WITH_API: "true"
       RICHER_CARD_COMMENT_EDITOR: "false"
@@ -45,35 +45,13 @@ services:
       - wekan-db
       - wekan-socat-smtp
     networks:
-      - caddy-wekan
+      - proxy-client-wekan
       - wekan-private
 
-  wekan-socat-smtp:
-    image: ghcr.io/ldev1281/docker-socat-socks5h:latest
-    container_name: wekan-socat-socks5h-smtp
-    restart: unless-stopped
-    environment:
-      LISTEN_PORT: ${WEKAN_SOCAT_SMTP_PORT}
-      TARGET_HOST: ${WEKAN_SOCAT_SMTP_HOST}
-      TARGET_PORT: ${WEKAN_SOCAT_SMTP_PORT}
-      SOCKS5H_HOST: ${WEKAN_SOCAT_SMTP_SOCKS5H_HOST:-}
-      SOCKS5H_PORT: ${WEKAN_SOCAT_SMTP_SOCKS5H_PORT:-}
-      SOCKS5H_USER: ${WEKAN_SOCAT_SMTP_SOCKS5H_USER:-}
-      SOCKS5H_PASSWORD: ${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}
-    networks:
-      wekan-universe: {}
-      wekan-private:
-        aliases:
-          - wekan.mailgun.org
-
 networks:
-  caddy-wekan:
-    name: caddy-wekan
+  proxy-client-wekan:
+    name: proxy-client-wekan
     external: true
-
-  wekan-universe:
-    name: wekan-universe
-    driver: bridge
 
   wekan-private:
     name: wekan-private
