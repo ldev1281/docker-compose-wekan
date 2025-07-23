@@ -43,7 +43,6 @@ sservices:
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - wekan-db
-      - wekan-socat-smtp
     networks:
       - proxy-client-wekan
       - wekan-private
