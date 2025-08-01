@@ -33,20 +33,19 @@ Once Caddy is installed, it will automatically detect the Wekan container via th
 
 Configuration Variables:
 
-| Variable Name                  | Description                                                          | Default Value                             |
-|-------------------------------|----------------------------------------------------------------------|-------------------------------------------|
-| `WEKAN_MONGO_VERSION`         | MongoDB image tag                                                    | `7`                                       |
-| `WEKAN_VERSION`               | Wekan Docker image tag                                               | `v7.92`                                   |
-| `WEKAN_APP_HOSTNAME`          | Public domain name for accessing Wekan                               | `wekan.example.com`                       |
-| `WEKAN_SMTP_FROM`             | Email address used as the sender                                     | `wekan@sandbox123.mailgun.org`           |
-| `WEKAN_SMTP_USER`             | SMTP username                                                        | `postmaster@sandbox123.mailgun.org`      |
-| `WEKAN_SMTP_PASS`             | SMTP password                                                        | `password`                                |
-| `WEKAN_SMTP_PORT`             | SMTP port                                                            | `587`                                     |
+| Variable Name                   | Description                                                           | Default Value                             |
+|--------------------------------|-----------------------------------------------------------------------|-------------------------------------------|
+| `WEKAN_MONGO_VERSION`          | MongoDB image tag                                                     | `7`                                       |
+| `WEKAN_VERSION`                | Wekan Docker image tag                                                | `v7.92`                                   |
+| `WEKAN_APP_HOSTNAME`           | Public domain name for accessing Wekan                                | `wekan.example.com`                       |
+| `WEKAN_SMTP_FROM`              | Email address used as the sender                                      | `wekan@sandbox123.mailgun.org`           |
+| `WEKAN_SMTP_USER`              | SMTP username                                                         | `postmaster@sandbox123.mailgun.org`      |
+| `WEKAN_SMTP_PASS`              | SMTP password                                                         | `password`                                |
+| `WEKAN_SMTP_PORT`              | SMTP port                                                             | `587`                                     |
 | `WEKAN_AUTHENTIK_OAUTH`        | Enable Authentik OAuth2 (`yes` to enable, empty to disable)           | `yes`                                     |
-| `WEKAN_AUTHENTIK_REALM`        | Keycloak realm name                                                  | `master`                                  |
-| `WEKAN_AUTHENTIK_CLIENT_ID`    | OAuth client ID                                                      | `wekan`                                   |
-| `WEKAN_AUTHENTIK_SECRET`       | OAuth client secret                                                  | `secret`                                  |
-| `WEKAN_AUTHENTIK_SERVER_URL`   | Authentik base URL (without `/realms/...`)                            | `https://auth.example.com`                |
+| `WEKAN_AUTHENTIK_CLIENT_ID`    | OAuth client ID from Authentik                                        | `wekan`                                   |
+| `WEKAN_AUTHENTIK_SECRET`       | OAuth client secret from Authentik                                    | `secret`                                  |
+| `WEKAN_AUTHENTIK_SERVER_URL`   | Authentik base URL (e.g., `https://auth.example.com`)                 | `https://auth.example.com`                |
 
 To configure and launch all required services, run the provided script:
 
