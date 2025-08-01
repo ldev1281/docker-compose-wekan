@@ -1,6 +1,6 @@
 #!/bin/bash
 # -------------------------------------
-# Wekan setup script 
+# Wekan setup script with Authentik OAuth
 # -------------------------------------
 set -e
 
@@ -53,25 +53,22 @@ prompt_for_configuration() {
     WEKAN_SMTP_PORT=${input:-${WEKAN_SMTP_PORT:-587}}
 
     echo ""
-    # OAuth (Keycloak)
-    echo "Keycloak OAuth settings:"
-    read -p "Enable Keycloak OAuth? (yes/no) [${WEKAN_KEYCLOAK_OAUTH:-no}]: " input
-    WEKAN_KEYCLOAK_OAUTH=${input:-${WEKAN_KEYCLOAK_OAUTH:-no}}
+    # OAuth (Authentik)
+    echo "Authentik OAuth settings:"
+    read -p "Enable Authentik OAuth? (yes/no) [${WEKAN_AUTHENTIK_OAUTH:-no}]: " input
+    WEKAN_AUTHENTIK_OAUTH=${input:-${WEKAN_AUTHENTIK_OAUTH:-no}}
 
-    if [[ "$WEKAN_KEYCLOAK_OAUTH" == "yes" ]]; then
-        read -p "WEKAN_KEYCLOAK_REALM [${WEKAN_KEYCLOAK_REALM:-master}]: " input
-        WEKAN_KEYCLOAK_REALM=${input:-${WEKAN_KEYCLOAK_REALM:-master}}
+    if [[ "$WEKAN_AUTHENTIK_OAUTH" == "yes" ]]; then
+        read -p "WEKAN_AUTHENTIK_CLIENT_ID [${WEKAN_AUTHENTIK_CLIENT_ID:-wekan}]: " input
+        WEKAN_AUTHENTIK_CLIENT_ID=${input:-${WEKAN_AUTHENTIK_CLIENT_ID:-wekan}}
 
-        read -p "WEKAN_KEYCLOAK_CLIENT_ID [${WEKAN_KEYCLOAK_CLIENT_ID:-wekan}]: " input
-        WEKAN_KEYCLOAK_CLIENT_ID=${input:-${WEKAN_KEYCLOAK_CLIENT_ID:-wekan}}
+        read -p "WEKAN_AUTHENTIK_SECRET [${WEKAN_AUTHENTIK_SECRET:-}]: " input
+        WEKAN_AUTHENTIK_SECRET=${input:-${WEKAN_AUTHENTIK_SECRET:-}}
 
-        read -p "WEKAN_KEYCLOAK_SECRET [${WEKAN_KEYCLOAK_SECRET:-}]: " input
-        WEKAN_KEYCLOAK_SECRET=${input:-${WEKAN_KEYCLOAK_SECRET:-}}
-
-        read -p "WEKAN_KEYCLOAK_SERVER_URL [${WEKAN_KEYCLOAK_SERVER_URL:-https://auth.example.com}]: " input
-        WEKAN_KEYCLOAK_SERVER_URL=${input:-${WEKAN_KEYCLOAK_SERVER_URL:-https://auth.example.com}}
+        read -p "WEKAN_AUTHENTIK_SERVER_URL [${WEKAN_AUTHENTIK_SERVER_URL:-https://auth.example.com}]: " input
+        WEKAN_AUTHENTIK_SERVER_URL=${input:-${WEKAN_AUTHENTIK_SERVER_URL:-https://auth.example.com}}
     else
-        WEKAN_KEYCLOAK_OAUTH=""
+        WEKAN_AUTHENTIK_OAUTH=""
     fi
 }
 
@@ -91,13 +88,12 @@ confirm_and_save_configuration() {
         "WEKAN_SMTP_PASS='${WEKAN_SMTP_PASS}'"
         "WEKAN_SMTP_PORT=${WEKAN_SMTP_PORT}"
         ""
-        "# Wekan Keycloak OAuth settings"
-        "# Set WEKAN_KEYCLOAK_OAUTH empty or comment it out to disable"
-        "WEKAN_KEYCLOAK_OAUTH=${WEKAN_KEYCLOAK_OAUTH}"
-        "WEKAN_KEYCLOAK_REALM=${WEKAN_KEYCLOAK_REALM:-}"
-        "WEKAN_KEYCLOAK_CLIENT_ID=${WEKAN_KEYCLOAK_CLIENT_ID:-}"
-        "WEKAN_KEYCLOAK_SECRET=${WEKAN_KEYCLOAK_SECRET:-}"
-        "WEKAN_KEYCLOAK_SERVER_URL=${WEKAN_KEYCLOAK_SERVER_URL:-}"
+        "# Wekan Authentik OAuth settings"
+        "# Set WEKAN_AUTHENTIK_OAUTH empty or comment it out to disable"
+        "WEKAN_AUTHENTIK_OAUTH=${WEKAN_AUTHENTIK_OAUTH}"
+        "WEKAN_AUTHENTIK_CLIENT_ID=${WEKAN_AUTHENTIK_CLIENT_ID:-}"
+        "WEKAN_AUTHENTIK_SECRET=${WEKAN_AUTHENTIK_SECRET:-}"
+        "WEKAN_AUTHENTIK_SERVER_URL=${WEKAN_AUTHENTIK_SERVER_URL:-}"
     )
 
     echo ""

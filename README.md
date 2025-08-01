@@ -42,11 +42,11 @@ Configuration Variables:
 | `WEKAN_SMTP_USER`             | SMTP username                                                        | `postmaster@sandbox123.mailgun.org`      |
 | `WEKAN_SMTP_PASS`             | SMTP password                                                        | `password`                                |
 | `WEKAN_SMTP_PORT`             | SMTP port                                                            | `587`                                     |
-| `WEKAN_KEYCLOAK_OAUTH`        | Enable Keycloak OAuth2 (`yes` to enable, empty to disable)           | `yes`                                     |
-| `WEKAN_KEYCLOAK_REALM`        | Keycloak realm name                                                  | `master`                                  |
-| `WEKAN_KEYCLOAK_CLIENT_ID`    | OAuth client ID                                                      | `wekan`                                   |
-| `WEKAN_KEYCLOAK_SECRET`       | OAuth client secret                                                  | `secret`                                  |
-| `WEKAN_KEYCLOAK_SERVER_URL`   | Keycloak base URL (without `/realms/...`)                            | `https://auth.example.com`                |
+| `WEKAN_AUTHENTIK_OAUTH`        | Enable Authentik OAuth2 (`yes` to enable, empty to disable)           | `yes`                                     |
+| `WEKAN_AUTHENTIK_REALM`        | Keycloak realm name                                                  | `master`                                  |
+| `WEKAN_AUTHENTIK_CLIENT_ID`    | OAuth client ID                                                      | `wekan`                                   |
+| `WEKAN_AUTHENTIK_SECRET`       | OAuth client secret                                                  | `secret`                                  |
+| `WEKAN_AUTHENTIK_SERVER_URL`   | Authentik base URL (without `/realms/...`)                            | `https://auth.example.com`                |
 
 To configure and launch all required services, run the provided script:
 
