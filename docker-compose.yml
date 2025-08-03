@@ -1,4 +1,5 @@
 services:
+
   wekan-db:
     image: mongo:${WEKAN_MONGO_VERSION}
     container_name: wekan-db
@@ -15,65 +16,46 @@ services:
     environment:
       MONGO_URL: mongodb://wekan-db:27017/wekan
       ROOT_URL: https://${WEKAN_APP_HOSTNAME}
-      MAIL_URL: smtp://${WEKAN_SMTP_USER}:${WEKAN_SMTP_PASS}@wekan.mailgun.org:${WEKAN_SOCAT_SMTP_PORT}
+      MAIL_URL: smtp://${WEKAN_SMTP_USER}:${WEKAN_SMTP_PASS}@smtp.mailgun.org:${WEKAN_SMTP_PORT}
       MAIL_FROM: ${WEKAN_SMTP_FROM}
+
       WITH_API: "true"
       RICHER_CARD_COMMENT_EDITOR: "false"
       CARD_OPENED_WEBHOOK_ENABLED: "false"
       BIGEVENTS_PATTERN: "NONE"
       BROWSER_POLICY_ENABLED: "true"
       ACCOUNTS_EMAIL_VERIFICATION: "true"
-      ACCOUNTS_LOCKOUT_LOGIN_TOKEN_AUTH: ${WEKAN_KEYCLOAK_OAUTH:+true}
-      ACCOUNTS_ALLOW_USER_REGISTRATION: ${WEKAN_KEYCLOAK_OAUTH:+false}
-      PASSWORD_LOGIN_ENABLED: ${WEKAN_KEYCLOAK_OAUTH:+false}
-      OAUTH2_ENABLED: ${WEKAN_KEYCLOAK_OAUTH:+true}
-      OAUTH2_LOGIN_STYLE: ${WEKAN_KEYCLOAK_OAUTH:+redirect}
-      OAUTH2_CLIENT_ID: ${WEKAN_KEYCLOAK_OAUTH:+$WEKAN_KEYCLOAK_CLIENT_ID}
-      OAUTH2_SECRET: ${WEKAN_KEYCLOAK_OAUTH:+$WEKAN_KEYCLOAK_SECRET}
-      OAUTH2_SERVER_URL: ${WEKAN_KEYCLOAK_OAUTH:+$WEKAN_KEYCLOAK_SERVER_URL}
-      OAUTH2_AUTH_ENDPOINT: ${WEKAN_KEYCLOAK_OAUTH:+/realms/$WEKAN_KEYCLOAK_REALM/protocol/openid-connect/auth}
-      OAUTH2_TOKEN_ENDPOINT: ${WEKAN_KEYCLOAK_OAUTH:+/realms/$WEKAN_KEYCLOAK_REALM/protocol/openid-connect/token}
-      OAUTH2_USERINFO_ENDPOINT: ${WEKAN_KEYCLOAK_OAUTH:+/realms/$WEKAN_KEYCLOAK_REALM/protocol/openid-connect/userinfo}
-      OAUTH2_ID_MAP: ${WEKAN_KEYCLOAK_OAUTH:+sub}
-      OAUTH2_USERNAME_MAP: ${WEKAN_KEYCLOAK_OAUTH:+preferred_username}
-      OAUTH2_EMAIL_MAP: ${WEKAN_KEYCLOAK_OAUTH:+email}
-      OAUTH2_FULLNAME_MAP: ${WEKAN_KEYCLOAK_OAUTH:+name}
+      ACCOUNTS_LOCKOUT_LOGIN_TOKEN_AUTH: ${WEKAN_AUTHENTIK_OAUTH:+true}
+      ACCOUNTS_ALLOW_USER_REGISTRATION: ${WEKAN_AUTHENTIK_OAUTH:+false}
+      PASSWORD_LOGIN_ENABLED: ${WEKAN_AUTHENTIK_OAUTH:+false}
+      OAUTH2_ENABLED: ${WEKAN_AUTHENTIK_OAUTH:+true}
+      OAUTH2_LOGIN_STYLE: ${WEKAN_AUTHENTIK_OAUTH:+redirect}
+      OAUTH2_CLIENT_ID: ${WEKAN_AUTHENTIK_OAUTH:+$WEKAN_AUTHENTIK_CLIENT_ID}
+      OAUTH2_SECRET: ${WEKAN_AUTHENTIK_OAUTH:+$WEKAN_AUTHENTIK_SECRET}
+      OAUTH2_SERVER_URL: ${WEKAN_AUTHENTIK_OAUTH:+$WEKAN_AUTHENTIK_SERVER_URL}
+      OAUTH2_AUTH_ENDPOINT: ${WEKAN_AUTHENTIK_OAUTH:+/application/o/authorize/}
+      OAUTH2_TOKEN_ENDPOINT: ${WEKAN_AUTHENTIK_OAUTH:+/application/o/token/}
+      OAUTH2_USERINFO_ENDPOINT: ${WEKAN_AUTHENTIK_OAUTH:+/application/o/userinfo/}
+      OAUTH2_ID_MAP: ${WEKAN_AUTHENTIK_OAUTH:+sub}
+      OAUTH2_USERNAME_MAP: ${WEKAN_AUTHENTIK_OAUTH:+preferred_username}
+      OAUTH2_EMAIL_MAP: ${WEKAN_AUTHENTIK_OAUTH:+email}
+      OAUTH2_FULLNAME_MAP: ${WEKAN_AUTHENTIK_OAUTH:+name}
+
     volumes:
       - ./vol/wekan-app/data:/data
       - /etc/localtime:/etc/localtime:ro
+
     depends_on:
       - wekan-db
-      - wekan-socat-smtp
+
     networks:
-      - caddy-wekan
+      - proxy-client-wekan
       - wekan-private
 
-  wekan-socat-smtp:
-    image: ghcr.io/ldev1281/docker-socat-socks5h:latest
-    container_name: wekan-socat-socks5h-smtp
-    restart: unless-stopped
-    environment:
-      LISTEN_PORT: ${WEKAN_SOCAT_SMTP_PORT}
-      TARGET_HOST: ${WEKAN_SOCAT_SMTP_HOST}
-      TARGET_PORT: ${WEKAN_SOCAT_SMTP_PORT}
-      SOCKS5H_HOST: ${WEKAN_SOCAT_SMTP_SOCKS5H_HOST:-}
-      SOCKS5H_PORT: ${WEKAN_SOCAT_SMTP_SOCKS5H_PORT:-}
-      SOCKS5H_USER: ${WEKAN_SOCAT_SMTP_SOCKS5H_USER:-}
-      SOCKS5H_PASSWORD: ${WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD:-}
-    networks:
-      wekan-universe: {}
-      wekan-private:
-        aliases:
-          - wekan.mailgun.org
-
 networks:
-  caddy-wekan:
-    name: caddy-wekan
+  proxy-client-wekan:
+    name: proxy-client-wekan
     external: true
-
-  wekan-universe:
-    name: wekan-universe
-    driver: bridge
 
   wekan-private:
     name: wekan-private

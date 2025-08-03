@@ -22,7 +22,7 @@ This project is designed to work with the reverse proxy configuration provided b
 1. **Create the shared Docker network** (if it doesn't already exist):
 
    ```bash
-   docker network create --driver bridge caddy-wekan
+   docker network create --driver bridge proxy-client-wekan
    ```
 
 2. **Set up the Caddy reverse proxy** by following the instructions in the [`docker-compose-caddy`](https://github.com/ldev1281/docker-compose-caddy).  
@@ -33,27 +33,19 @@ Once Caddy is installed, it will automatically detect the Wekan container via th
 
 Configuration Variables:
 
-| Variable Name                      | Description                                         | Default Value                                                 |
-|-----------------------------------|------------------------------------------------------|---------------------------------------------------------------|
-| `WEKAN_MONGO_VERSION`             | MongoDB image tag                                                                                                    | `7`                                                             |
-| `WEKAN_VERSION`                   | Wekan image tag                                                          | `v7.92`                                   |
-| `WEKAN_MONGO_VERSION`              | MongoDB image version                                                   | `7`                                       |
-| `WEKAN_VERSION`                    | Wekan Docker image tag                                                  | `v7.92`                                   |
-| `WEKAN_APP_HOSTNAME`              | Public domain name for accessing Wekan                                   | `wekan.example.com`                       |
-| `WEKAN_SMTP_FROM`                 | Email address used as the sender                                         | `wekan@sandbox123.mailgun.org`            |
-| `WEKAN_SMTP_USER`                 | SMTP username                                                            | `postmaster@sandbox123.mailgun.org`       |
-| `WEKAN_SMTP_PASS`                 | SMTP password                                                            | `password`                                |
-| `WEKAN_SOCAT_SMTP_PORT`           | Local port for SMTP forwarding (via socat container)                    | `587`                                      |
-| `WEKAN_SOCAT_SMTP_HOST`           | Remote SMTP server hostname                                             | `smtp.mailgun.org`                         |
-| `WEKAN_SOCAT_SMTP_SOCKS5H_HOST`   | SOCKS5h proxy hostname (optional)                                       | `dante.example.com`                        |
-| `WEKAN_SOCAT_SMTP_SOCKS5H_PORT`   | SOCKS5h proxy port (optional)                                           | `1080`                                     |
-| `WEKAN_SOCAT_SMTP_SOCKS5H_USER`   | SOCKS5h proxy username (optional)                                       | `dante`                                    |
-| `WEKAN_SOCAT_SMTP_SOCKS5H_PASSWORD`| SOCKS5h proxy password (optional)                                       |`password`                                 |
-| `WEKAN_KEYCLOAK_OAUTH`            | Enable Keycloak OAuth2 integration (`yes` to enable, empty to disable) | `yes`                                       |
-| `WEKAN_KEYCLOAK_REALM`            | Keycloak realm name                                                     | `master`                                   |
-| `WEKAN_KEYCLOAK_CLIENT_ID`        | OAuth client ID                                                         | `wekan`                                    |
-| `WEKAN_KEYCLOAK_SECRET`           | OAuth client secret                                                     | `secret`                                   |
-| `WEKAN_KEYCLOAK_SERVER_URL`       | Keycloak base URL (without `/realms/...`)                              | `https://auth.example.com`                  |
+| Variable Name                   | Description                                                           | Default Value                             |
+|--------------------------------|-----------------------------------------------------------------------|-------------------------------------------|
+| `WEKAN_MONGO_VERSION`          | MongoDB image tag                                                     | `7`                                       |
+| `WEKAN_VERSION`                | Wekan Docker image tag                                                | `v7.92`                                   |
+| `WEKAN_APP_HOSTNAME`           | Public domain name for accessing Wekan                                | `wekan.example.com`                       |
+| `WEKAN_SMTP_FROM`              | Email address used as the sender                                      | `wekan@sandbox123.mailgun.org`           |
+| `WEKAN_SMTP_USER`              | SMTP username                                                         | `postmaster@sandbox123.mailgun.org`      |
+| `WEKAN_SMTP_PASS`              | SMTP password                                                         | `password`                                |
+| `WEKAN_SMTP_PORT`              | SMTP port                                                             | `587`                                     |
+| `WEKAN_AUTHENTIK_OAUTH`        | Enable Authentik OAuth2 (`yes` to enable, empty to disable)           | `yes`                                     |
+| `WEKAN_AUTHENTIK_CLIENT_ID`    | OAuth client ID from Authentik                                        | `wekan`                                   |
+| `WEKAN_AUTHENTIK_SECRET`       | OAuth client secret from Authentik                                    | `secret`                                  |
+| `WEKAN_AUTHENTIK_SERVER_URL`   | Authentik base URL (e.g., `https://auth.example.com`)                 | `https://auth.example.com`                |
 
 To configure and launch all required services, run the provided script:
 
